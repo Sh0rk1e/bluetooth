@@ -55,7 +55,7 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
             height: 90vh;
             display: flex;
             flex-direction: column;
@@ -621,46 +621,33 @@
             flex-shrink: 0;
         }
 
-        .joystick-wrapper {
+        .joystick-control-panel {
             flex: 1;
             display: flex;
             flex-direction: column;
+            gap: 20px;
+        }
+
+        .joystick-wrapper {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 30px;
+            gap: 20px;
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
         }
 
         .joystick-area {
             width: 300px;
             height: 300px;
-            background: var(--bg-secondary);
+            background: var(--bg-primary);
             border: 2px solid var(--border-color);
             border-radius: 10px;
             position: relative;
             touch-action: none;
             user-select: none;
-        }
-
-        .joystick {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background: #4299e1;
-            border-radius: 50%;
-            cursor: move;
-            top: 110px;
-            left: 110px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5em;
-        }
-
-        .joystick:active {
-            transform: scale(1.1);
         }
 
         .axis-indicators {
@@ -694,6 +681,62 @@
             transform: translateX(-50%);
         }
 
+        .direction-marker {
+            position: absolute;
+            color: var(--text-secondary);
+            font-size: 1.2em;
+            opacity: 0.5;
+        }
+
+        .direction-marker.up {
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .direction-marker.down {
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .direction-marker.left {
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .direction-marker.right {
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .joystick {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            border-radius: 50%;
+            cursor: move;
+            top: 110px;
+            left: 110px;
+            box-shadow: 0 5px 20px rgba(66, 153, 225, 0.4);
+            transition: transform 0.1s, box-shadow 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            border: 3px solid white;
+            z-index: 10;
+        }
+
+        .joystick:active {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.6);
+        }
+
         .joystick-controls {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -725,6 +768,66 @@
             color: white;
         }
 
+        .joystick-btn .btn-text {
+            margin-left: 5px;
+        }
+
+        .joystick-config {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 300px;
+            background: var(--bg-tertiary);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .config-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .config-item label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .config-item input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .config-item input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .config-value {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #4299e1;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .joystick-display {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
         .joystick-data {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -751,6 +854,87 @@
             font-size: 0.8em;
             color: var(--text-secondary);
             margin-top: 5px;
+        }
+
+        .motor-display {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .motor-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .motor-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .motor-wrapper {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .motor {
+            background: var(--bg-tertiary);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .motor.active {
+            border-color: #4299e1;
+            box-shadow: 0 5px 15px rgba(66, 153, 225, 0.2);
+        }
+
+        .motor-label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .motor-speed {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4299e1;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+
+        .motor-direction {
+            font-size: 1em;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: var(--bg-primary);
+            display: inline-block;
+        }
+
+        .motor-direction.forward {
+            color: #38a169;
+            background: rgba(56, 161, 105, 0.1);
+        }
+
+        .motor-direction.backward {
+            color: #e53e3e;
+            background: rgba(229, 62, 62, 0.1);
+        }
+
+        .motor-direction.stop {
+            color: #718096;
+            background: rgba(113, 128, 150, 0.1);
         }
 
         /* Connection Info */
@@ -1018,7 +1202,16 @@
             }
             
             .joystick-controls,
+            .joystick-config,
             .joystick-data {
+                width: 250px;
+            }
+            
+            .joystick-config {
+                grid-template-columns: 1fr;
+            }
+            
+            .joystick-display {
                 width: 250px;
             }
         }
@@ -1045,12 +1238,15 @@
             }
             
             .joystick-controls,
-            .joystick-data {
+            .joystick-config,
+            .joystick-data,
+            .joystick-display {
                 width: 200px;
             }
             
-            .joystick-data {
-                grid-template-columns: repeat(2, 1fr);
+            .motor-wrapper {
+                grid-template-columns: 1fr;
+                gap: 15px;
             }
         }
     </style>
@@ -1161,38 +1357,78 @@
                             <div class="joystick-header">
                                 <i class="fas fa-gamepad"></i> Virtual Joystick Controller
                             </div>
-                            <div class="joystick-wrapper">
-                                <div class="joystick-area" id="joystickArea">
-                                    <div class="axis-indicators">
-                                        <div class="axis-line horizontal"></div>
-                                        <div class="axis-line vertical"></div>
+                            
+                            <div class="joystick-control-panel">
+                                <div class="joystick-wrapper">
+                                    <div class="joystick-area" id="joystickArea">
+                                        <div class="axis-indicators">
+                                            <div class="axis-line horizontal"></div>
+                                            <div class="axis-line vertical"></div>
+                                            <div class="direction-marker up" title="Forward">↑</div>
+                                            <div class="direction-marker down" title="Backward">↓</div>
+                                            <div class="direction-marker left" title="Left">←</div>
+                                            <div class="direction-marker right" title="Right">→</div>
+                                        </div>
+                                        <div class="joystick" id="joystick">
+                                            <i class="fas fa-arrows-alt"></i>
+                                        </div>
                                     </div>
-                                    <div class="joystick" id="joystick">
-                                        <i class="fas fa-arrows-alt"></i>
+                                    
+                                    <div class="joystick-controls">
+                                        <button class="joystick-btn" id="joystickMode" data-mode="analog">
+                                            <i class="fas fa-sliders-h"></i> <span class="btn-text">Analog Mode</span>
+                                        </button>
+                                        <button class="joystick-btn" id="joystickCenter">
+                                            <i class="fas fa-crosshairs"></i> <span class="btn-text">Center</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="joystick-config">
+                                        <div class="config-item">
+                                            <label for="sensitivity">Sensitivity:</label>
+                                            <input type="range" id="sensitivity" min="1" max="10" value="5">
+                                            <span class="config-value" id="sensitivityValue">5</span>
+                                        </div>
+                                        <div class="config-item">
+                                            <label for="deadzone">Deadzone:</label>
+                                            <input type="range" id="deadzone" min="0" max="30" value="10">
+                                            <span class="config-value" id="deadzoneValue">10%</span>
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="joystick-controls">
-                                    <button class="joystick-btn" id="joystickMode" data-mode="analog">
-                                        <i class="fas fa-sliders-h"></i> Analog Mode
-                                    </button>
-                                    <button class="joystick-btn" id="joystickCenter">
-                                        <i class="fas fa-crosshairs"></i> Center
-                                    </button>
-                                </div>
-                                
-                                <div class="joystick-data">
-                                    <div class="data-item">
-                                        <div class="data-value" id="joystickX">0.00</div>
-                                        <div class="data-label">X Axis</div>
+                                <div class="joystick-display">
+                                    <div class="joystick-data">
+                                        <div class="data-item">
+                                            <div class="data-value" id="joystickX">0.00</div>
+                                            <div class="data-label">X Axis</div>
+                                        </div>
+                                        <div class="data-item">
+                                            <div class="data-value" id="joystickY">0.00</div>
+                                            <div class="data-label">Y Axis</div>
+                                        </div>
+                                        <div class="data-item">
+                                            <div class="data-value" id="joystickAngle">0°</div>
+                                            <div class="data-label">Angle</div>
+                                        </div>
                                     </div>
-                                    <div class="data-item">
-                                        <div class="data-value" id="joystickY">0.00</div>
-                                        <div class="data-label">Y Axis</div>
-                                    </div>
-                                    <div class="data-item">
-                                        <div class="data-value" id="joystickAngle">0°</div>
-                                        <div class="data-label">Angle</div>
+                                    
+                                    <div class="motor-display">
+                                        <div class="motor-diagram">
+                                            <div class="motor-title">H-Bridge Motor Control</div>
+                                            <div class="motor-wrapper">
+                                                <div class="motor left-motor">
+                                                    <div class="motor-label">Left Motor</div>
+                                                    <div class="motor-speed" id="leftMotorSpeed">0%</div>
+                                                    <div class="motor-direction" id="leftMotorDir">STOP</div>
+                                                </div>
+                                                <div class="motor right-motor">
+                                                    <div class="motor-label">Right Motor</div>
+                                                    <div class="motor-speed" id="rightMotorSpeed">0%</div>
+                                                    <div class="motor-direction" id="rightMotorDir">STOP</div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1206,7 +1442,7 @@
                             <div class="code-header">
                                 Arduino Code Examples
                                 <select class="code-select" id="codeSelect">
-                                    <option value="joystick">Joystick Control</option>
+                                    <option value="joystick">H-Bridge Joystick Control</option>
                                     <option value="basic">Basic Serial Control</option>
                                     <option value="motor">DC Motor Control</option>
                                     <option value="servo">Servo Motor Control</option>
@@ -1434,12 +1670,26 @@
             let consoleBuffer = [];
             let settings = {};
             
-            // Joystick state
-            let joystickMode = 'analog'; // 'analog' or 'digital'
-            let joystickActive = false;
-            let joystickX = 0;
-            let joystickY = 0;
-            let joystickSendInterval = null;
+            // Joystick configuration
+            let joystickConfig = {
+                mode: 'analog', // 'analog' or 'digital'
+                sensitivity: 5, // 1-10
+                deadzone: 0.1, // 10% deadzone
+                active: false,
+                x: 0,
+                y: 0,
+                lastSentX: 0,
+                lastSentY: 0,
+                sendInterval: null,
+                motorLeft: {
+                    speed: 0,
+                    direction: 'STOP'
+                },
+                motorRight: {
+                    speed: 0,
+                    direction: 'STOP'
+                }
+            };
             
             // Load settings from localStorage
             function loadSettings() {
@@ -1535,43 +1785,48 @@
                 }
             }
             
-            // Arduino code examples - UPDATED WITH JOYSTICK CODE
+            // Arduino code examples
             const codeExamples = {
                 joystick: `/*
- * JOYSTICK CONTROL FOR ARDUINO
- * Receives analog joystick commands via Bluetooth
- * Format: JX{value}Y{value} (e.g., JX0.75Y-0.25)
+ * H-BRIDGE MOTOR CONTROL WITH L298N
+ * Controls two DC motors using L298N H-Bridge
+ * Receives joystick commands: JX{x}Y{y}L{left}R{right}LD{d}RD{d}
  */
 
-// Define your motor/servo pins
-const int MOTOR_A1 = 8;
-const int MOTOR_A2 = 9;
-const int MOTOR_B1 = 10;
-const int MOTOR_B2 = 11;
-const int MOTOR_PWM_A = 5;
-const int MOTOR_PWM_B = 6;
+// Motor A (Left Motor) connections
+const int ENA = 9;    // Enable A (PWM)
+const int IN1 = 8;    // Input 1
+const int IN2 = 7;    // Input 2
+
+// Motor B (Right Motor) connections  
+const int ENB = 6;    // Enable B (PWM)
+const int IN3 = 5;    // Input 3
+const int IN4 = 4;    // Input 4
 
 // Joystick variables
 float joyX = 0.0;
 float joyY = 0.0;
-bool isCentered = true;
+int leftSpeed = 0;
+int rightSpeed = 0;
+char leftDir = 'S';  // 'F'=Forward, 'B'=Backward, 'S'=Stop
+char rightDir = 'S';
 
 void setup() {
   Serial.begin(9600);
   
-  // Setup motor pins
-  pinMode(MOTOR_A1, OUTPUT);
-  pinMode(MOTOR_A2, OUTPUT);
-  pinMode(MOTOR_B1, OUTPUT);
-  pinMode(MOTOR_B2, OUTPUT);
-  pinMode(MOTOR_PWM_A, OUTPUT);
-  pinMode(MOTOR_PWM_B, OUTPUT);
+  // Set all motor control pins as outputs
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
   
   // Stop motors initially
   stopMotors();
   
-  Serial.println("Joystick Control Ready");
-  Serial.println("Expecting commands in format: JX{value}Y{value}");
+  Serial.println("H-Bridge Motor Control Ready");
+  Serial.println("Format: JX{x}Y{y}L{left}R{right}LD{d}RD{d}");
 }
 
 void loop() {
@@ -1588,7 +1843,106 @@ void loop() {
 }
 
 void parseJoystickCommand(String cmd) {
-  // Format: JX0.75Y-0.25
+  // Format: JX0.75Y-0.25L100R75LDFRDB
+  // X, Y: joystick position (-1.0 to 1.0)
+  // L, R: motor speeds (0-100%)
+  // LD, RD: motor directions (F=Forward, B=Backward, S=Stop)
+  
+  int xIndex = cmd.indexOf('X');
+  int yIndex = cmd.indexOf('Y');
+  int lIndex = cmd.indexOf('L', yIndex + 1);
+  int rIndex = cmd.indexOf('R', lIndex + 1);
+  int ldIndex = cmd.indexOf("LD", rIndex + 1);
+  int rdIndex = cmd.indexOf("RD", ldIndex + 2);
+  
+  if (xIndex != -1 && yIndex != -1 && lIndex != -1 && rIndex != -1) {
+    // Parse X and Y values
+    String xStr = cmd.substring(xIndex + 1, yIndex);
+    String yStr = cmd.substring(yIndex + 1, lIndex);
+    
+    joyX = xStr.toFloat();
+    joyY = yStr.toFloat();
+    
+    // Parse motor speeds
+    String leftStr = cmd.substring(lIndex + 1, rIndex);
+    String rightStr = cmd.substring(rIndex + 1, ldIndex);
+    
+    leftSpeed = leftStr.toInt();
+    rightSpeed = rightStr.toInt();
+    
+    // Parse motor directions
+    if (ldIndex != -1) leftDir = cmd.charAt(ldIndex + 2);
+    if (rdIndex != -1) rightDir = cmd.charAt(rdIndex + 2);
+    
+    // Clamp values
+    joyX = constrain(joyX, -1.0, 1.0);
+    joyY = constrain(joyY, -1.0, 1.0);
+    leftSpeed = constrain(leftSpeed, 0, 100);
+    rightSpeed = constrain(rightSpeed, 0, 100);
+    
+    // Send back confirmation
+    Serial.print("X=");
+    Serial.print(joyX, 2);
+    Serial.print(" Y=");
+    Serial.print(joyY, 2);
+    Serial.print(" L=");
+    Serial.print(leftSpeed);
+    Serial.print(leftDir);
+    Serial.print(" R=");
+    Serial.print(rightSpeed);
+    Serial.println(rightDir);
+  }
+}
+
+void updateMotors() {
+  // Control Left Motor
+  controlMotor(leftDir, leftSpeed, ENA, IN1, IN2, 'L');
+  
+  // Control Right Motor
+  controlMotor(rightDir, rightSpeed, ENB, IN3, IN4, 'R');
+}
+
+void controlMotor(char direction, int speed, int enablePin, int pin1, int pin2, char motorName) {
+  // Convert percentage to PWM (0-255)
+  int pwmValue = map(speed, 0, 100, 0, 255);
+  
+  switch(direction) {
+    case 'F':  // Forward
+      digitalWrite(pin1, HIGH);
+      digitalWrite(pin2, LOW);
+      analogWrite(enablePin, pwmValue);
+      break;
+      
+    case 'B':  // Backward
+      digitalWrite(pin1, LOW);
+      digitalWrite(pin2, HIGH);
+      analogWrite(enablePin, pwmValue);
+      break;
+      
+    case 'S':  // Stop
+    default:
+      digitalWrite(pin1, LOW);
+      digitalWrite(pin2, LOW);
+      analogWrite(enablePin, 0);
+      break;
+  }
+}
+
+void stopMotors() {
+  // Stop both motors
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
+  
+  Serial.println("Motors stopped");
+}
+
+// Alternative: Simple joystick parser for basic control
+void parseSimpleJoystick(String cmd) {
+  // Format: JX{x}Y{y}
   int xIndex = cmd.indexOf('X');
   int yIndex = cmd.indexOf('Y');
   
@@ -1599,86 +1953,36 @@ void parseJoystickCommand(String cmd) {
     joyX = xStr.toFloat();
     joyY = yStr.toFloat();
     
-    // Clamp values to -1.0 to 1.0
-    joyX = constrain(joyX, -1.0, 1.0);
-    joyY = constrain(joyY, -1.0, 1.0);
+    // Calculate motor speeds using differential drive
+    float leftMotor = joyY + joyX;
+    float rightMotor = joyY - joyX;
     
-    // Check if joystick is centered
-    isCentered = (abs(joyX) < 0.1 && abs(joyY) < 0.1);
+    // Constrain to -1.0 to 1.0
+    leftMotor = constrain(leftMotor, -1.0, 1.0);
+    rightMotor = constrain(rightMotor, -1.0, 1.0);
     
-    // Send back confirmation
-    Serial.print("Joystick: X=");
-    Serial.print(joyX, 2);
-    Serial.print(", Y=");
-    Serial.println(joyY, 2);
+    // Convert to percentages and directions
+    leftSpeed = abs(leftMotor) * 100;
+    rightSpeed = abs(rightMotor) * 100;
+    leftDir = leftMotor > 0 ? 'F' : (leftMotor < 0 ? 'B' : 'S');
+    rightDir = rightMotor > 0 ? 'F' : (rightMotor < 0 ? 'B' : 'S');
+    
+    // Apply deadzone (stop if both values are very small)
+    if (abs(joyX) < 0.1 && abs(joyY) < 0.1) {
+      leftSpeed = 0;
+      rightSpeed = 0;
+      leftDir = 'S';
+      rightDir = 'S';
+    }
+    
+    Serial.print("Simple: L=");
+    Serial.print(leftSpeed);
+    Serial.print(leftDir);
+    Serial.print(" R=");
+    Serial.print(rightSpeed);
+    Serial.println(rightDir);
   }
-}
-
-void updateMotors() {
-  if (isCentered) {
-    stopMotors();
-    return;
-  }
-  
-  // Calculate motor speeds based on joystick position
-  // This is a simple differential drive calculation
-  float leftMotor = joyY + joyX;
-  float rightMotor = joyY - joyX;
-  
-  // Constrain values to -1.0 to 1.0
-  leftMotor = constrain(leftMotor, -1.0, 1.0);
-  rightMotor = constrain(rightMotor, -1.0, 1.0);
-  
-  // Convert to PWM values (0-255)
-  int pwmLeft = abs(leftMotor) * 255;
-  int pwmRight = abs(rightMotor) * 255;
-  
-  // Control left motor
-  if (leftMotor > 0.1) {
-    // Forward
-    digitalWrite(MOTOR_A1, HIGH);
-    digitalWrite(MOTOR_A2, LOW);
-    analogWrite(MOTOR_PWM_A, pwmLeft);
-  } else if (leftMotor < -0.1) {
-    // Backward
-    digitalWrite(MOTOR_A1, LOW);
-    digitalWrite(MOTOR_A2, HIGH);
-    analogWrite(MOTOR_PWM_A, pwmLeft);
-  } else {
-    // Stop
-    digitalWrite(MOTOR_A1, LOW);
-    digitalWrite(MOTOR_A2, LOW);
-    analogWrite(MOTOR_PWM_A, 0);
-  }
-  
-  // Control right motor
-  if (rightMotor > 0.1) {
-    // Forward
-    digitalWrite(MOTOR_B1, HIGH);
-    digitalWrite(MOTOR_B2, LOW);
-    analogWrite(MOTOR_PWM_B, pwmRight);
-  } else if (rightMotor < -0.1) {
-    // Backward
-    digitalWrite(MOTOR_B1, LOW);
-    digitalWrite(MOTOR_B2, HIGH);
-    analogWrite(MOTOR_PWM_B, pwmRight);
-  } else {
-    // Stop
-    digitalWrite(MOTOR_B1, LOW);
-    digitalWrite(MOTOR_B2, LOW);
-    analogWrite(MOTOR_PWM_B, 0);
-  }
-}
-
-void stopMotors() {
-  digitalWrite(MOTOR_A1, LOW);
-  digitalWrite(MOTOR_A2, LOW);
-  digitalWrite(MOTOR_B1, LOW);
-  digitalWrite(MOTOR_B2, LOW);
-  analogWrite(MOTOR_PWM_A, 0);
-  analogWrite(MOTOR_PWM_B, 0);
 }`,
-
                 basic: `/*
  * BASIC SERIAL CONTROL
  * This is a simple example that reads commands from Serial
@@ -2074,257 +2378,360 @@ void loop() {
             }
             
             // Setup joystick functionality
-            function setupJoystick() {
-                const joystickArea = elements.joystickArea;
-                const joystick = elements.joystick;
-                
-                let centerX, centerY, maxDistance;
-                let isDragging = false;
-                let lastSentX = 0;
-                let lastSentY = 0;
+function setupJoystick() {
+    const joystickArea = elements.joystickArea;
+    const joystick = elements.joystick;
+    
+    let isDragging = false;
+    let areaRect, centerX, centerY, maxDistance;
 
-                // Update dimensions of the joystick area
-                function updateDimensions() {
-                    const areaRect = joystickArea.getBoundingClientRect();
-                    centerX = areaRect.width / 2;
-                    centerY = areaRect.height / 2;
-                    // Ensure we have a valid maxDistance even if hidden initially
-                    maxDistance = Math.max(Math.min(centerX, centerY) - 40, 50);
-                }
+    // Update dimensions of the joystick area
+    function updateDimensions() {
+        areaRect = joystickArea.getBoundingClientRect();
+        centerX = areaRect.width / 2;
+        centerY = areaRect.height / 2;
+        maxDistance = Math.max(Math.min(centerX, centerY) - 40, 50);
+        
+        // Position joystick at center
+        joystick.style.left = (centerX - 40) + 'px';
+        joystick.style.top = (centerY - 40) + 'px';
+    }
+    
+    // Calculate motor values from joystick position
+    function calculateMotorValues(x, y) {
+        // This implements differential drive algorithm
+        // For H-bridge motor control
+        
+        let leftMotor, rightMotor;
+        
+        if (joystickConfig.mode === 'digital') {
+            // Digital mode: 8-direction control
+            const distance = Math.sqrt(x * x + y * y);
+            if (distance > 0.3) {
+                const angle = Math.atan2(y, x);
+                const snappedAngle = Math.round(angle / (Math.PI / 4)) * (Math.PI / 4);
+                x = Math.cos(snappedAngle);
+                y = Math.sin(snappedAngle);
                 
-                // Start joystick sending interval
-                function startJoystickSending() {
-                    if (joystickSendInterval) return;
-                    
-                    joystickSendInterval = setInterval(() => {
-                        if (joystickActive && isConnected) {
-                            let x = joystickX;
-                            let y = joystickY;
-
-                            // Apply digital mode if selected
-                            if (joystickMode === 'digital') {
-                                const distance = Math.sqrt(x * x + y * y);
-                                if (distance > 0.3) {
-                                    // Snap to 8 directions
-                                    const angle = Math.atan2(y, x);
-                                    const snappedAngle = Math.round(angle / (Math.PI / 4)) * (Math.PI / 4);
-                                    x = Math.round(Math.cos(snappedAngle) * 100) / 100;
-                                    y = Math.round(Math.sin(snappedAngle) * 100) / 100;
-                                    
-                                    // Ensure clean -1, 0, 1 values for cardinal directions
-                                    if (Math.abs(x) < 0.1) x = 0;
-                                    if (Math.abs(y) < 0.1) y = 0;
-                                    if (x > 0.7) x = 1;
-                                    if (x < -0.7) x = -1;
-                                    if (y > 0.7) y = 1;
-                                    if (y < -0.7) y = -1;
-                                } else {
-                                    x = 0;
-                                    y = 0;
-                                }
-                            }
-                            
-                            // Only send if values changed significantly
-                            if (Math.abs(x - lastSentX) > 0.01 || Math.abs(y - lastSentY) > 0.01) {
-                                sendJoystickCommand(x, y);
-                                lastSentX = x;
-                                lastSentY = y;
-                                
-                                // Update display with potentially snapped values
-                                if (joystickMode === 'digital') {
-                                    updateJoystickDisplay(x, y);
-                                }
-                            }
-                        }
-                    }, 100); // Send every 100ms
-                }
-                
-                // Stop joystick sending interval
-                function stopJoystickSending() {
-                    if (joystickSendInterval) {
-                        clearInterval(joystickSendInterval);
-                        joystickSendInterval = null;
-                    }
-                }
-                
-                // Update joystick display
-                function updateJoystickDisplay(x, y) {
-                    elements.joystickX.textContent = x.toFixed(2);
-                    elements.joystickY.textContent = y.toFixed(2);
-                    
-                    // Calculate angle
-                    const angle = Math.atan2(y, x) * (180 / Math.PI);
-                    elements.joystickAngle.textContent = Math.round(angle) + '°';
-                    
-                    // Get current joystick area dimensions
-                    const areaRect = joystickArea.getBoundingClientRect();
-                    const currentCenterX = areaRect.width / 2;
-                    const currentCenterY = areaRect.height / 2;
-                    const currentMaxDistance = Math.max(Math.min(currentCenterX, currentCenterY) - 40, 50);
-                    
-                    // Update joystick position
-                    const posX = currentCenterX + (x * currentMaxDistance);
-                    const posY = currentCenterY - (y * currentMaxDistance); // Invert Y axis
-                    
-                    joystick.style.left = (posX - 40) + 'px';
-                    joystick.style.top = (posY - 40) + 'px';
-                    
-                    // Update joystick color based on position
-                    const intensity = Math.sqrt(x * x + y * y);
-                    const hue = 210; // Blue color
-                    const saturation = 70 + (intensity * 30);
-                    const lightness = 50 - (intensity * 20);
-                    joystick.style.background = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-                }
-                
-                // Send joystick command to Arduino
-                function sendJoystickCommand(x, y) {
-                    if (!isConnected) return;
-                    
-                    // Format: JX0.75Y-0.25
-                    const command = `JX${x.toFixed(2)}Y${y.toFixed(2)}`;
-                    sendCommand(command);
-                    addToConsole(`Joystick: X=${x.toFixed(2)}, Y=${y.toFixed(2)}`, 'info');
-                }
-                
-                // Center joystick
-                function centerJoystick() {
-                    joystickX = 0;
-                    joystickY = 0;
-                    updateJoystickDisplay(0, 0);
-                    sendJoystickCommand(0, 0);
-                }
-                
-                // Handle mouse/touch events
-                function startDrag(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    updateDimensions(); // Recalculate dimensions when interaction starts
-                    isDragging = true;
-                    joystickActive = true;
-                    joystick.style.transform = 'scale(1.1)';
-                    document.addEventListener('mousemove', drag);
-                    document.addEventListener('touchmove', drag, { passive: false });
-                    document.addEventListener('mouseup', stopDrag);
-                    document.addEventListener('touchend', stopDrag);
-                    startJoystickSending();
-                    
-                    // Initial drag to current position
-                    drag(e);
-                }
-                
-                function drag(e) {
-                    if (!isDragging) return;
-                    
-                    if (e.cancelable) {
-                        e.preventDefault();
-                    }
-                    
-                    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                    
-                    if (clientX === undefined || clientY === undefined) return;
-                    
-                    // Get current joystickArea bounds
-                    const areaRect = joystickArea.getBoundingClientRect();
-                    
-                    // Calculate position relative to joystick area center
-                    const x = clientX - areaRect.left - areaRect.width / 2;
-                    const y = areaRect.height / 2 - (clientY - areaRect.top); // Invert Y axis
-                    
-                    // Calculate distance from center
-                    const distance = Math.sqrt(x * x + y * y);
-                    
-                    // Limit to max distance
-                    const limitedX = distance > maxDistance ? (x / distance) * maxDistance : x;
-                    const limitedY = distance > maxDistance ? (y / distance) * maxDistance : y;
-                    
-                    // Normalize to -1 to 1 range
-                    joystickX = limitedX / maxDistance;
-                    joystickY = limitedY / maxDistance;
-                    
-                    updateJoystickDisplay(joystickX, joystickY);
-                }
-                
-                function stopDrag() {
-                    if (!isDragging) return;
-                    
-                    isDragging = false;
-                    joystickActive = false;
-                    joystick.style.transform = '';
-                    document.removeEventListener('mousemove', drag);
-                    document.removeEventListener('touchmove', drag);
-                    document.removeEventListener('mouseup', stopDrag);
-                    document.removeEventListener('touchend', stopDrag);
-                    
-                    // Return to center with animation
-                    const startX = joystickX;
-                    const startY = joystickY;
-                    const duration = 300; // ms
-                    const startTime = Date.now();
-                    
-                    function animateReturn() {
-                        const elapsed = Date.now() - startTime;
-                        const progress = Math.min(elapsed / duration, 1);
-                        
-                        // Ease out function
-                        const easeOut = 1 - Math.pow(1 - progress, 3);
-                        
-                        joystickX = startX * (1 - easeOut);
-                        joystickY = startY * (1 - easeOut);
-                        
-                        updateJoystickDisplay(joystickX, joystickY);
-                        
-                        if (progress < 1) {
-                            requestAnimationFrame(animateReturn);
-                        } else {
-                            centerJoystick();
-                            stopJoystickSending();
-                        }
-                    }
-                    
-                    requestAnimationFrame(animateReturn);
-                }
-                
-                // Event listeners for joystick
-                joystick.addEventListener('mousedown', startDrag);
-                joystick.addEventListener('touchstart', startDrag);
-                joystickArea.addEventListener('mousedown', startDrag);
-                joystickArea.addEventListener('touchstart', startDrag);
-                
-                // Joystick mode button
-                elements.joystickMode.addEventListener('click', () => {
-                    if (joystickMode === 'analog') {
-                        joystickMode = 'digital';
-                        elements.joystickMode.innerHTML = '<i class="fas fa-gamepad"></i> Digital Mode';
-                        elements.joystickMode.classList.add('active');
-                        addToConsole('Joystick mode: Digital (8-direction)', 'info');
-                    } else {
-                        joystickMode = 'analog';
-                        elements.joystickMode.innerHTML = '<i class="fas fa-sliders-h"></i> Analog Mode';
-                        elements.joystickMode.classList.remove('active');
-                        addToConsole('Joystick mode: Analog (continuous)', 'info');
-                    }
-                });
-                
-                // Center button
-                elements.joystickCenter.addEventListener('click', centerJoystick);
-                
-                // Initial dimensions and center
-                updateDimensions();
-                centerJoystick();
-                
-                // Expose for tab switching and handle window resize
-                window.refreshJoystick = updateDimensions;
-                window.addEventListener('resize', updateDimensions);
+                // Clean values for digital mode
+                if (Math.abs(x) < 0.1) x = 0;
+                if (Math.abs(y) < 0.1) y = 0;
+                if (x > 0.7) x = 1;
+                if (x < -0.7) x = -1;
+                if (y > 0.7) y = 1;
+                if (y < -0.7) y = -1;
+            } else {
+                x = 0;
+                y = 0;
             }
+        }
+        
+        // Apply deadzone
+        const distance = Math.sqrt(x * x + y * y);
+        if (distance < joystickConfig.deadzone) {
+            joystickConfig.motorLeft.speed = 0;
+            joystickConfig.motorRight.speed = 0;
+            joystickConfig.motorLeft.direction = 'STOP';
+            joystickConfig.motorRight.direction = 'STOP';
+            return;
+        }
+        
+        // Apply sensitivity
+        const sensitivityFactor = joystickConfig.sensitivity / 5; // 5 is default
+        x = x * sensitivityFactor;
+        y = y * sensitivityFactor;
+        
+        // Clamp values to -1 to 1
+        x = Math.max(-1, Math.min(1, x));
+        y = Math.max(-1, Math.min(1, y));
+        
+        // Differential drive calculation for H-bridge
+        // leftMotor = y + x
+        // rightMotor = y - x
+        leftMotor = y + x;
+        rightMotor = y - x;
+        
+        // Clamp motor values
+        leftMotor = Math.max(-1, Math.min(1, leftMotor));
+        rightMotor = Math.max(-1, Math.min(1, rightMotor));
+        
+        // Store motor values
+        joystickConfig.motorLeft.speed = Math.abs(leftMotor) * 100;
+        joystickConfig.motorRight.speed = Math.abs(rightMotor) * 100;
+        
+        joystickConfig.motorLeft.direction = leftMotor > 0 ? 'FORWARD' : 
+                                           leftMotor < 0 ? 'BACKWARD' : 'STOP';
+        joystickConfig.motorRight.direction = rightMotor > 0 ? 'FORWARD' : 
+                                            rightMotor < 0 ? 'BACKWARD' : 'STOP';
+    }
+    
+    // Update motor display
+    function updateMotorDisplay() {
+        const leftMotor = document.getElementById('leftMotorSpeed');
+        const rightMotor = document.getElementById('rightMotorSpeed');
+        const leftDir = document.getElementById('leftMotorDir');
+        const rightDir = document.getElementById('rightMotorDir');
+        
+        if (leftMotor && rightMotor && leftDir && rightDir) {
+            leftMotor.textContent = Math.round(joystickConfig.motorLeft.speed) + '%';
+            rightMotor.textContent = Math.round(joystickConfig.motorRight.speed) + '%';
+            
+            leftDir.textContent = joystickConfig.motorLeft.direction;
+            rightDir.textContent = joystickConfig.motorRight.direction;
+            
+            leftDir.className = 'motor-direction ' + joystickConfig.motorLeft.direction.toLowerCase();
+            rightDir.className = 'motor-direction ' + joystickConfig.motorRight.direction.toLowerCase();
+        }
+    }
+    
+    // Start joystick sending interval
+    function startJoystickSending() {
+        if (joystickConfig.sendInterval) return;
+        
+        joystickConfig.sendInterval = setInterval(() => {
+            if (joystickConfig.active && isConnected) {
+                const x = joystickConfig.x;
+                const y = joystickConfig.y;
+                
+                // Calculate motor values
+                calculateMotorValues(x, y);
+                
+                // Only send if values changed significantly
+                if (Math.abs(x - joystickConfig.lastSentX) > 0.01 || 
+                    Math.abs(y - joystickConfig.lastSentY) > 0.01 ||
+                    joystickConfig.motorLeft.speed === 0 && joystickConfig.lastSentX !== 0) {
+                    
+                    sendJoystickCommand(x, y);
+                    joystickConfig.lastSentX = x;
+                    joystickConfig.lastSentY = y;
+                    
+                    // Update displays
+                    updateMotorDisplay();
+                    if (joystickConfig.mode === 'digital') {
+                        updateJoystickDisplay(x, y);
+                    }
+                }
+            }
+        }, 100); // Send every 100ms
+    }
+    
+    // Stop joystick sending interval
+    function stopJoystickSending() {
+        if (joystickConfig.sendInterval) {
+            clearInterval(joystickConfig.sendInterval);
+            joystickConfig.sendInterval = null;
+        }
+    }
+    
+    // Update joystick display
+    function updateJoystickDisplay(x, y) {
+        elements.joystickX.textContent = x.toFixed(2);
+        elements.joystickY.textContent = y.toFixed(2);
+        
+        // Calculate angle
+        const angle = Math.atan2(y, x) * (180 / Math.PI);
+        elements.joystickAngle.textContent = Math.round(angle) + '°';
+        
+        // Update joystick position
+        const posX = centerX + (x * maxDistance);
+        const posY = centerY - (y * maxDistance); // Invert Y axis
+        
+        joystick.style.left = (posX - 40) + 'px';
+        joystick.style.top = (posY - 40) + 'px';
+        
+        // Update joystick color based on position intensity
+        const intensity = Math.sqrt(x * x + y * y);
+        const hue = 210; // Blue color
+        const saturation = 70 + (intensity * 30);
+        const lightness = 50 - (intensity * 20);
+        joystick.style.background = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    }
+    
+    // Send joystick command to Arduino
+    function sendJoystickCommand(x, y) {
+        if (!isConnected) return;
+        
+        // Format: JX{value}Y{value}L{left_speed}R{right_speed}LD{left_dir}RD{right_dir}
+        const command = `JX${x.toFixed(2)}Y${y.toFixed(2)}L${Math.round(joystickConfig.motorLeft.speed)}R${Math.round(joystickConfig.motorRight.speed)}LD${joystickConfig.motorLeft.direction.charAt(0)}RD${joystickConfig.motorRight.direction.charAt(0)}`;
+        
+        sendCommand(command);
+        addToConsole(`Joystick: L=${Math.round(joystickConfig.motorLeft.speed)}% ${joystickConfig.motorLeft.direction}, R=${Math.round(joystickConfig.motorRight.speed)}% ${joystickConfig.motorRight.direction}`, 'info');
+    }
+    
+    // Center joystick
+    function centerJoystick() {
+        joystickConfig.x = 0;
+        joystickConfig.y = 0;
+        joystickConfig.motorLeft.speed = 0;
+        joystickConfig.motorRight.speed = 0;
+        joystickConfig.motorLeft.direction = 'STOP';
+        joystickConfig.motorRight.direction = 'STOP';
+        
+        updateJoystickDisplay(0, 0);
+        updateMotorDisplay();
+        sendJoystickCommand(0, 0);
+    }
+    
+    // Handle mouse/touch events
+    function startDrag(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        updateDimensions();
+        isDragging = true;
+        joystickConfig.active = true;
+        joystick.style.transform = 'scale(1.1)';
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, { passive: false });
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+        startJoystickSending();
+        
+        // Initial drag to current position
+        drag(e);
+    }
+    
+    function drag(e) {
+        if (!isDragging) return;
+        
+        if (e.cancelable) {
+            e.preventDefault();
+        }
+        
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        
+        if (clientX === undefined || clientY === undefined) return;
+        
+        // Calculate position relative to joystick area center
+        const x = clientX - areaRect.left - centerX;
+        const y = centerY - (clientY - areaRect.top); // Invert Y axis
+        
+        // Calculate distance from center
+        const distance = Math.sqrt(x * x + y * y);
+        
+        // Limit to max distance
+        const limitedX = distance > maxDistance ? (x / distance) * maxDistance : x;
+        const limitedY = distance > maxDistance ? (y / distance) * maxDistance : y;
+        
+        // Normalize to -1 to 1 range
+        joystickConfig.x = limitedX / maxDistance;
+        joystickConfig.y = limitedY / maxDistance;
+        
+        // Calculate motor values for display
+        calculateMotorValues(joystickConfig.x, joystickConfig.y);
+        
+        updateJoystickDisplay(joystickConfig.x, joystickConfig.y);
+        updateMotorDisplay();
+    }
+    
+    function stopDrag() {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        joystickConfig.active = false;
+        joystick.style.transform = '';
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('touchmove', drag);
+        document.removeEventListener('mouseup', stopDrag);
+        document.removeEventListener('touchend', stopDrag);
+        
+        // Return to center with animation
+        const startX = joystickConfig.x;
+        const startY = joystickConfig.y;
+        const duration = 300; // ms
+        const startTime = Date.now();
+        
+        function animateReturn() {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Ease out function
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            
+            joystickConfig.x = startX * (1 - easeOut);
+            joystickConfig.y = startY * (1 - easeOut);
+            
+            // Calculate motor values during animation
+            calculateMotorValues(joystickConfig.x, joystickConfig.y);
+            
+            updateJoystickDisplay(joystickConfig.x, joystickConfig.y);
+            updateMotorDisplay();
+            
+            if (progress < 1) {
+                requestAnimationFrame(animateReturn);
+            } else {
+                centerJoystick();
+                stopJoystickSending();
+            }
+        }
+        
+        requestAnimationFrame(animateReturn);
+    }
+    
+    // Event listeners for joystick - USING PASSIVE EVENT LISTENERS FOR TOUCH
+    joystick.addEventListener('mousedown', startDrag);
+    joystick.addEventListener('touchstart', startDrag, { passive: false });
+    joystickArea.addEventListener('mousedown', startDrag);
+    joystickArea.addEventListener('touchstart', startDrag, { passive: false });
+    
+    // Joystick mode button
+    elements.joystickMode.addEventListener('click', () => {
+        if (joystickConfig.mode === 'analog') {
+            joystickConfig.mode = 'digital';
+            elements.joystickMode.innerHTML = '<i class="fas fa-gamepad"></i> <span class="btn-text">Digital Mode</span>';
+            elements.joystickMode.classList.add('active');
+            addToConsole('Joystick mode: Digital (8-direction)', 'info');
+        } else {
+            joystickConfig.mode = 'analog';
+            elements.joystickMode.innerHTML = '<i class="fas fa-sliders-h"></i> <span class="btn-text">Analog Mode</span>';
+            elements.joystickMode.classList.remove('active');
+            addToConsole('Joystick mode: Analog (continuous)', 'info');
+        }
+    });
+    
+    // Center button
+    elements.joystickCenter.addEventListener('click', centerJoystick);
+    
+    // Sensitivity slider
+    document.getElementById('sensitivity').addEventListener('input', (e) => {
+        joystickConfig.sensitivity = parseInt(e.target.value);
+        document.getElementById('sensitivityValue').textContent = joystickConfig.sensitivity;
+    });
+    
+    // Deadzone slider
+    document.getElementById('deadzone').addEventListener('input', (e) => {
+        const deadzoneValue = parseInt(e.target.value);
+        joystickConfig.deadzone = deadzoneValue / 100;
+        document.getElementById('deadzoneValue').textContent = deadzoneValue + '%';
+    });
+    
+    // Initial setup
+    updateDimensions();
+    centerJoystick();
+    
+    // Handle window resize
+    window.addEventListener('resize', updateDimensions);
+    
+    // Handle tab switching to refresh joystick
+    document.querySelector('.tab[data-tab="joystick"]').addEventListener('click', () => {
+        setTimeout(updateDimensions, 50);
+    });
+}
             
             // Setup code syntax highlighting
             function setupCodeSyntaxHighlighting() {
                 // Syntax highlighting function
                 window.highlightCode = function(code) {
                     return code
-                        
+                        .replace(/\/\*[\s\S]*?\*\//g, '<span class="code-comment">$&</span>')
+                        .replace(/\/\/.*$/gm, '<span class="code-comment">$&</span>')
+                        .replace(/\b(void|setup|loop|if|else|for|while|switch|case|break|return|const|int|float|char|String|long|boolean|true|false)\b/g, 
+                            '<span class="code-keyword">$1</span>')
+                        .replace(/\b(Serial\.begin|Serial\.print|Serial\.println|Serial\.available|Serial\.read|Serial\.readStringUntil|digitalWrite|digitalRead|analogWrite|analogRead|pinMode|delay|constrain|map)\b/g,
+                            '<span class="code-function">$1</span>')
+                        .replace(/"([^"]*)"/g, '<span class="code-string">"$1"</span>')
+                        .replace(/\b(\d+\.?\d*)\b/g, '<span class="code-number">$1</span>');
                 };
             }
             
@@ -2397,11 +2804,6 @@ void loop() {
                         document.querySelectorAll('.tab-content').forEach(content => 
                             content.classList.remove('active'));
                         document.getElementById(`${tabId}-tab`).classList.add('active');
-                        
-                        // If joystick tab is opened, refresh its dimensions
-                        if (tabId === 'joystick' && window.refreshJoystick) {
-                            setTimeout(window.refreshJoystick, 50);
-                        }
                     });
                 });
                 
@@ -2730,71 +3132,83 @@ void loop() {
                 elements.messagesReceived.textContent = messagesReceived;
             }
             
-            // WebSocket connection
-            function connectWebSocket() {
-                if (ws && ws.readyState !== WebSocket.CLOSED) {
-                    ws.close();
-                }
-                
-                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-                const wsUrl = `${protocol}//${window.location.host}`;
-                
-                addToConsole('Connecting to server...', 'info');
-                
-                ws = new WebSocket(wsUrl);
-                
-                ws.onopen = () => {
-                    addToConsole('Connected to server', 'success');
-                    updateWebSocketStatus(true);
-                    isConnected = true;
-                };
-                
-                ws.onmessage = (event) => {
-                    try {
-                        const data = JSON.parse(event.data);
-                        messagesReceived++;
-                        updateStats();
-                        
-                        switch(data.type) {
-                            case 'status':
-                                updateBluetoothStatus(data.bluetoothConnected);
-                                if (data.error) {
-                                    addToConsole(`Error: ${data.error}`, 'error');
-                                }
-                                break;
-                                
-                            case 'ack':
-                                addToConsole(`Command "${data.command}" ${data.success ? 'sent successfully' : 'failed to send'}`);
-                                break;
-                                
-                            case 'data':
-                                addToConsole(`Arduino: ${data.message}`);
-                                break;
-                        }
-                    } catch (error) {
-                        console.error('Error parsing WebSocket message:', error);
+// WebSocket connection
+function connectWebSocket() {
+    if (ws && ws.readyState !== WebSocket.CLOSED) {
+        ws.close();
+    }
+    
+    // Use relative URL for local development
+    // This will connect to the same host as the page is served from
+    let wsUrl;
+    
+    if (window.location.protocol === 'https:') {
+        wsUrl = `wss://${window.location.host}`;
+    } else {
+        wsUrl = `ws://${window.location.host}`;
+    }
+    
+    // Alternative: Use specific port if you know your server runs on port 3000
+    // wsUrl = window.location.protocol === 'https:' ? 
+    //     `wss://${window.location.hostname}:3000` : 
+    //     `ws://${window.location.hostname}:3000`;
+    
+    addToConsole(`Connecting to WebSocket: ${wsUrl}`, 'info');
+    
+    ws = new WebSocket(wsUrl);
+    
+    ws.onopen = () => {
+        addToConsole('Connected to server', 'success');
+        updateWebSocketStatus(true);
+        isConnected = true;
+    };
+    
+    ws.onmessage = (event) => {
+        try {
+            const data = JSON.parse(event.data);
+            messagesReceived++;
+            updateStats();
+            
+            switch(data.type) {
+                case 'status':
+                    updateBluetoothStatus(data.bluetoothConnected);
+                    if (data.error) {
+                        addToConsole(`Error: ${data.error}`, 'error');
                     }
-                };
-                
-                ws.onclose = () => {
-                    addToConsole('Disconnected from server', 'warning');
-                    updateWebSocketStatus(false);
-                    isConnected = false;
-                    updateBluetoothStatus(false);
+                    break;
                     
-                    if (settings.autoReconnect && !reconnectInterval) {
-                        reconnectInterval = setInterval(() => {
-                            addToConsole('Reconnecting...', 'info');
-                            connectWebSocket();
-                        }, settings.reconnectDelay * 1000);
-                    }
-                };
-                
-                ws.onerror = (error) => {
-                    console.error('WebSocket error:', error);
-                    addToConsole('Connection error', 'error');
-                };
+                case 'ack':
+                    addToConsole(`Command "${data.command}" ${data.success ? 'sent successfully' : 'failed to send'}`);
+                    break;
+                    
+                case 'data':
+                    addToConsole(`Arduino: ${data.message}`);
+                    break;
             }
+        } catch (error) {
+            console.error('Error parsing WebSocket message:', error);
+        }
+    };
+    
+    ws.onclose = () => {
+        addToConsole('Disconnected from server', 'warning');
+        updateWebSocketStatus(false);
+        isConnected = false;
+        updateBluetoothStatus(false);
+        
+        if (settings.autoReconnect && !reconnectInterval) {
+            reconnectInterval = setInterval(() => {
+                addToConsole('Reconnecting...', 'info');
+                connectWebSocket();
+            }, settings.reconnectDelay * 1000);
+        }
+    };
+    
+    ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        addToConsole('WebSocket connection failed. Make sure the Node.js server is running.', 'error');
+    };
+}
             
             function sendCommand(command) {
                 if (!isConnected || !ws || ws.readyState !== WebSocket.OPEN) {
@@ -2913,8 +3327,8 @@ void loop() {
                 if (reconnectInterval) {
                     clearInterval(reconnectInterval);
                 }
-                if (joystickSendInterval) {
-                    clearInterval(joystickSendInterval);
+                if (joystickConfig.sendInterval) {
+                    clearInterval(joystickConfig.sendInterval);
                 }
             });
             
