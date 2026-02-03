@@ -1,0 +1,21 @@
+{
+  "name": "arduino-bluetooth-bridge",
+  "version": "1.0.0",
+  "description": "Node.js bridge to control Arduino via Bluetooth from a web browser",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": ["arduino", "bluetooth", "websocket", "serial"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2",
+    "serialport": "^12.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
