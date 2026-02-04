@@ -2246,6 +2246,45 @@ void loop() {
       Serial.println("Blink complete");
     }
   }
+}`
+,
+
+                test:`/*void setup() {
+  Serial.begin(9600);
+  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.println("Arduino Ready");
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    char command = Serial.read();
+    
+    switch(command) {
+      case 'F':
+        Serial.println("Moving FORWARD");
+        break;
+      case 'B':
+        Serial.println("Moving BACKWARD");
+        break;
+      case 'S':
+        Serial.println("STOPPING");
+        break;
+      case 'L':
+        digitalWrite(LED_BUILTIN, HIGH);
+        Serial.println("LED ON");
+        break;
+      case 'l':
+        digitalWrite(LED_BUILTIN, LOW);
+        Serial.println("LED OFF");
+        break;
+      case '?':
+        Serial.println("HELLO from Arduino!");
+        break;
+      default:
+        Serial.print("Unknown command: ");
+        Serial.println(command);
+    }
+  }
 }`,
 
                 sensor: `/*

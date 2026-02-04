@@ -1,230 +1,212 @@
 const { SerialPort } = require('serialport');
 const { ReadlineParser } = require('@serialport/parser-readline');
+const EventEmitter = require('events');
 
-class BluetoothSerial {
-  constructor(port = 'COM6', baudRate = 9600) {
+class BluetoothSerial extends EventEmitter {
+  constructor(port, baudRate = 9600) {
+    super();
     this.port = port;
     this.baudRate = baudRate;
     this.serialPort = null;
     this.parser = null;
     this.isConnected = false;
-    this.onDataCallback = null;
-    this.onErrorCallback = null;
-    this.onConnectCallback = null;
     this.reconnectInterval = null;
     this.reconnectAttempts = 0;
     this.maxReconnectAttempts = 10;
-    this.autoReconnect = true;
+    this.reconnectDelay = 5000; // 5 seconds
+    this.buffer = '';
   }
 
   async connect() {
-    console.log(`Connecting to Bluetooth device on ${this.port} at ${this.baudRate} baud...`);
-    
-    // Check available ports first (for debugging)
     try {
-      const ports = await SerialPort.list();
-      console.log('Available serial ports:');
-      ports.forEach(port => {
-        console.log(`  - ${port.path} (${port.manufacturer || 'Unknown'})`);
-      });
-    } catch (err) {
-      console.log('Could not list serial ports:', err.message);
-    }
+      console.log(`Connecting to ${this.port} at ${this.baudRate} baud...`);
+      
+      // Close existing connection if any
+      if (this.serialPort) {
+        await this.close();
+      }
 
-    try {
-      // Create the serial port
+      // Create new serial port instance
       this.serialPort = new SerialPort({
         path: this.port,
         baudRate: this.baudRate,
         dataBits: 8,
         stopBits: 1,
         parity: 'none',
-        autoOpen: false // We'll open manually to handle errors better
+        autoOpen: true
       });
 
-      // Handle connection open
+      // Setup parser
+      this.parser = this.serialPort.pipe(new ReadlineParser({
+        delimiter: '\n',
+        encoding: 'utf8'
+      }));
+
+      // Event handlers
       this.serialPort.on('open', () => {
-        console.log(`Successfully connected to ${this.port}`);
+        console.log(`✅ Successfully connected to ${this.port}`);
         this.isConnected = true;
         this.reconnectAttempts = 0;
         
-        // Create a parser that reads lines
-        this.parser = this.serialPort.pipe(new ReadlineParser({ delimiter: '\r\n' }));
+        if (this.reconnectInterval) {
+          clearInterval(this.reconnectInterval);
+          this.reconnectInterval = null;
+        }
         
-        // Handle incoming data
-        this.parser.on('data', (data) => {
-          const trimmedData = data.trim();
-          if (trimmedData) {
-            console.log(`[Arduino] ${trimmedData}`);
-            
-            if (this.onDataCallback) {
-              this.onDataCallback(trimmedData);
-            }
-          }
-        });
+        this.emit('connect');
+        
+        // Send test message to Arduino
+        setTimeout(() => {
+          this.sendCommand('?'); // Test command
+        }, 1000);
+      });
 
-        // Notify of successful connection
-        if (this.onConnectCallback) {
-          this.onConnectCallback();
+      this.parser.on('data', (data) => {
+        const trimmedData = data.trim();
+        if (trimmedData) {
+          console.log(`📥 Arduino: ${trimmedData}`);
+          this.emit('data', trimmedData);
         }
       });
 
-      // Handle errors
-      this.serialPort.on('error', (err) => {
-        console.error('Serial port error:', err.message);
+      this.serialPort.on('error', (error) => {
+        console.error(`❌ Serial port error: ${error.message}`);
         this.isConnected = false;
+        this.emit('error', error);
         
-        if (this.onErrorCallback) {
-          this.onErrorCallback(err);
-        }
-        
-        if (this.autoReconnect) {
-          this.attemptReconnect();
+        // Attempt to reconnect
+        if (!this.reconnectInterval) {
+          this._scheduleReconnect();
         }
       });
 
-      // Handle port close
       this.serialPort.on('close', () => {
-        console.log('Serial port closed');
+        console.log(`🔌 Disconnected from ${this.port}`);
         this.isConnected = false;
+        this.emit('disconnect');
         
-        if (this.autoReconnect) {
-          this.attemptReconnect();
+        if (!this.reconnectInterval) {
+          this._scheduleReconnect();
         }
       });
 
-      // Now open the port
-      this.serialPort.open((err) => {
-        if (err) {
-          console.error('Failed to open serial port:', err.message);
-          this.isConnected = false;
-          
-          if (this.onErrorCallback) {
-            this.onErrorCallback(err);
-          }
-          
-          if (this.autoReconnect) {
-            this.attemptReconnect();
-          }
-        }
+      // Handle unpipe events
+      this.parser.on('close', () => {
+        console.log('Parser closed');
       });
 
     } catch (error) {
-      console.error('Failed to create serial port:', error.message);
-      if (this.autoReconnect) {
-        this.attemptReconnect();
-      }
+      console.error(`❌ Failed to initialize serial port: ${error.message}`);
+      this.emit('error', error);
+      this._scheduleReconnect();
     }
   }
 
-  attemptReconnect() {
+  _scheduleReconnect() {
     if (this.reconnectInterval || this.reconnectAttempts >= this.maxReconnectAttempts) {
-      if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-        console.error('Max reconnection attempts reached. Giving up.');
-      }
       return;
     }
 
     this.reconnectAttempts++;
-    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000); // Exponential backoff, max 30s
-    
-    console.log(`Attempting to reconnect in ${delay/1000} seconds (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
-    
-    this.reconnectInterval = setTimeout(() => {
-      this.reconnectInterval = null;
-      this.connect();
-    }, delay);
+    console.log(`🔄 Reconnection attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts} in ${this.reconnectDelay/1000} seconds...`);
+
+    this.reconnectInterval = setInterval(() => {
+      if (this.reconnectAttempts < this.maxReconnectAttempts) {
+        console.log('Attempting to reconnect...');
+        this.connect();
+      } else {
+        console.log('Max reconnection attempts reached. Please check your connection.');
+        clearInterval(this.reconnectInterval);
+        this.reconnectInterval = null;
+        this.emit('max_reconnect');
+      }
+    }, this.reconnectDelay);
   }
 
   sendCommand(command) {
     if (!this.isConnected || !this.serialPort) {
-      console.error('Cannot send command: Not connected to Bluetooth device');
-      return false;
-    }
-
-    if (!this.serialPort.isOpen) {
-      console.error('Cannot send command: Serial port is not open');
+      console.error('❌ Cannot send command: Bluetooth not connected');
+      this.emit('send_error', 'Bluetooth not connected');
       return false;
     }
 
     try {
-      // Send command with newline
-      this.serialPort.write(command + '\n');
-      console.log(`Sent command: ${command}`);
+      // Ensure command ends with newline
+      const cmd = command.endsWith('\n') ? command : command + '\n';
+      this.serialPort.write(cmd, (error) => {
+        if (error) {
+          console.error(`❌ Failed to send command "${command}":`, error.message);
+          this.emit('send_error', error.message);
+        } else {
+          console.log(`📤 Sent to Arduino: ${command}`);
+          this.emit('send_success', command);
+        }
+      });
       return true;
     } catch (error) {
-      console.error('Failed to send command:', error.message);
+      console.error(`❌ Error sending command: ${error.message}`);
+      this.emit('error', error);
       return false;
     }
   }
 
-  sendRaw(data) {
-    if (!this.isConnected || !this.serialPort) {
-      console.error('Cannot send data: Not connected to Bluetooth device');
-      return false;
-    }
-
-    try {
-      this.serialPort.write(data);
-      return true;
-    } catch (error) {
-      console.error('Failed to send raw data:', error.message);
-      return false;
-    }
-  }
-
-  close() {
-    this.autoReconnect = false;
+  async close() {
+    console.log('Closing Bluetooth connection...');
     
+    // Clear reconnect interval
     if (this.reconnectInterval) {
-      clearTimeout(this.reconnectInterval);
+      clearInterval(this.reconnectInterval);
       this.reconnectInterval = null;
     }
 
+    // Close serial port if open
     if (this.serialPort && this.serialPort.isOpen) {
-      this.serialPort.close((err) => {
-        if (err) {
-          console.error('Error closing serial port:', err.message);
-        }
+      return new Promise((resolve) => {
+        this.serialPort.close((error) => {
+          if (error) {
+            console.error('Error closing serial port:', error.message);
+          } else {
+            console.log('Serial port closed');
+          }
+          this.isConnected = false;
+          resolve();
+        });
       });
     }
-    
+
     this.isConnected = false;
-    console.log('Bluetooth connection closed');
+    return Promise.resolve();
   }
 
-  // Get current connection status
+  // Helper method to get connection status
   getStatus() {
     return {
-      isConnected: this.isConnected,
+      connected: this.isConnected,
       port: this.port,
       baudRate: this.baudRate,
-      reconnectAttempts: this.reconnectAttempts
+      reconnectAttempts: this.reconnectAttempts,
+      maxReconnectAttempts: this.maxReconnectAttempts
     };
   }
 
-  // Event handlers
-  onData(callback) {
-    this.onDataCallback = callback;
-  }
-
-  onError(callback) {
-    this.onErrorCallback = callback;
-  }
-
-  onConnect(callback) {
-    this.onConnectCallback = callback;
-  }
-
-  // Update port settings (useful if port changes)
-  updatePort(newPort, newBaudRate = null) {
-    this.close();
-    this.port = newPort;
-    if (newBaudRate) {
-      this.baudRate = newBaudRate;
+  // Static method to list available ports
+  static async listPorts() {
+    try {
+      const ports = await SerialPort.list();
+      console.log('\n🔍 Available serial ports:');
+      ports.forEach((port, index) => {
+        console.log(`${index + 1}. ${port.path}`);
+        console.log(`   Manufacturer: ${port.manufacturer || 'Unknown'}`);
+        console.log(`   Product ID: ${port.productId || 'Unknown'}`);
+        console.log(`   Vendor ID: ${port.vendorId || 'Unknown'}`);
+        if (port.pnpId) console.log(`   PNP ID: ${port.pnpId}`);
+        console.log('');
+      });
+      return ports;
+    } catch (error) {
+      console.error('Error listing ports:', error);
+      return [];
     }
-    this.autoReconnect = true;
-    this.connect();
   }
 }
 
